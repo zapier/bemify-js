@@ -9,6 +9,10 @@
     "prepublish": "npm run build",
     "test": "tape -r babel-register src/bemify-test.js | tap-spec"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/zapier/bemify-js"
+  },
   "keywords": [
     "bem",
     "bemify",
@@ -18,6 +22,9 @@
   ],
   "author": "Steven Hauser <steven.hauser@zapier.com>",
   "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/zapier/bemify-js/issues"
+  },
   "devDependencies": {
     "babel-cli": "^6.4.5",
     "babel-preset-es2015": "^6.3.13",
