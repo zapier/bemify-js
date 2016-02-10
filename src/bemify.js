@@ -18,7 +18,7 @@ const isSuffix = doesMatch(/^(--|__)/);
 const isElement = doesMatch(/^__/);
 const isModifier = doesMatch(/^--/);
 
-// Returns sorted array of all keys in `obj` whose values are truthy
+// Returns an array of all keys in `obj` whose values are truthy
 const truthyObjToArr = (obj) => (
   Object.keys(obj).filter((key) => !!obj[key])
 );
