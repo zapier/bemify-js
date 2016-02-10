@@ -38,12 +38,37 @@ test('object classes - does not modify non-bem classes', (t) => {
   t.end();
 });
 
+test('object classes - applies complex keys correctly', (t) => {
+  const actual = bemify('block', {
+    '__element --modifier-c': true,
+    '--modifier-a --modifier-b': true,
+    '--modifier-d --modifier-e': false,
+    'some-utility-a some-utility-b some-utility-c': true,
+    'some-utility-d some-utility-e': false,
+  });
+  const expected = [
+    'block__element',
+    'block__element--modifier-a',
+    'block__element--modifier-b',
+    'block__element--modifier-c',
+    'some-utility-a',
+    'some-utility-b',
+    'some-utility-c',
+  ].join(' ');
+  t.isEqual(actual, expected);
+  t.end();
+});
+
 test('object classes - throws if more than one element is supplied', (t) => {
-  const tryToBemify = () => bemify('block', {
+  const tryToBemifySimpleKey = () => bemify('block', {
     '__element-a': true,
     '__element-b': true,
   });
-  t.throws(tryToBemify);
+  const tryToBemifyComplexKey = () => bemify('block', {
+    '__element-a __element-b': true,
+  });
+  t.throws(tryToBemifySimpleKey);
+  t.throws(tryToBemifyComplexKey);
   t.end();
 });
 
@@ -84,13 +109,34 @@ test('array classes - does not modify non-bem classes', (t) => {
   t.end();
 });
 
+test('array classes - applies complex items correctly', (t) => {
+  const actual = bemify('block', [
+    '__element --modifier-a --modifier-b',
+    'some-utility-a some-utility-b some-utility-c',
+  ]);
+  const expected = [
+    'block__element',
+    'block__element--modifier-a',
+    'block__element--modifier-b',
+    'some-utility-a',
+    'some-utility-b',
+    'some-utility-c',
+  ].join(' ');
+  t.isEqual(actual, expected);
+  t.end();
+});
+
 test('array classes - throws if more than one element is supplied', (t) => {
-  const tryToBemify = () => bemify('block', [
+  const tryToBemifySimpleItems = () => bemify('block', [
     '__element-a',
     false,
     '__element-b',
   ]);
-  t.throws(tryToBemify);
+  const tryToBemifyComplexItems = () => bemify('block', [
+    '__element-a __element-b',
+  ]);
+  t.throws(tryToBemifySimpleItems);
+  t.throws(tryToBemifyComplexItems);
   t.end();
 });
 

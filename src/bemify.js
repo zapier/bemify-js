@@ -20,21 +20,28 @@ const isModifier = doesMatch(/^--/);
 
 // Returns sorted array of all keys in `obj` whose values are truthy
 const truthyObjToArr = (obj) => (
-  Object.keys(obj)
-    .filter((key) => !!obj[key])
-    .sort() // facilitate testing
+  Object.keys(obj).filter((key) => !!obj[key])
 );
 
 const buildError = (message) => new Error(`bemify - ${message}`);
+
+const splitClasses = (classes) => (classes || '').split(/\s+/);
+
+// Simple one-level flattening
+const flattenReduce = (flat, arr) => [...arr, ...flat];
 
 // Takes `classes` which may be one of several types and returns
 // an array of them with all falsy values filtered out.
 const normalizeSuffixes = (classes) => {
   let suffixes = [];
-  if (isString(classes)) { suffixes = classes.split(/\s+/); }
-  if (isArray(classes)) { suffixes = classes; }
+  if (isString(classes)) { suffixes = [classes]; }
+  if (isArray(classes)) { suffixes = [...classes]; }
   if (isObject(classes)) { suffixes = truthyObjToArr(classes); }
-  return suffixes.filter(Boolean);
+  return suffixes
+    .map(splitClasses)
+    .reduce(flattenReduce, [])
+    .filter(Boolean)
+    .sort(); // facilitate testing
 };
 
 // Finds the *only* element in `suffixes` and prefixes it
