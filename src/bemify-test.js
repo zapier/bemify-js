@@ -171,6 +171,63 @@ test('string classes - throws if more than one element is supplied', (t) => {
 });
 
 
+// Variadic classes
+
+test('variadic classes - applies all classes as specified', (t) => {
+  const stringClasses = '--modifier-string-a --modifier-string-b utility-string-a utility-string-b';
+  const arrayClasses = [
+    '--modifier-array-a --modifier-array-b',
+    '--modifier-array-c',
+    null,
+    'utility-array-a utility-array-b',
+    'utility-array-c',
+  ];
+  const objectClasses = {
+    '--modifier-object-a --modifier-object-b': true,
+    '--modifier-object-c': true,
+    '--modifier-object-d --modifier-object-e': false,
+    '--modifier-object-f': false,
+    'utility-object-a utility-object-b': true,
+    'utility-object-c': true,
+    'utility-object-d utility-object-e': false,
+    'utility-object-f': false,
+  };
+  const actualBlock = bemify('block', stringClasses, arrayClasses, objectClasses);
+  const expectedBlock = [
+    'block',
+    'block--modifier-array-a',
+    'block--modifier-array-b',
+    'block--modifier-array-c',
+    'block--modifier-object-a',
+    'block--modifier-object-b',
+    'block--modifier-object-c',
+    'block--modifier-string-a',
+    'block--modifier-string-b',
+    'utility-array-a',
+    'utility-array-b',
+    'utility-array-c',
+    'utility-object-a',
+    'utility-object-b',
+    'utility-object-c',
+    'utility-string-a',
+    'utility-string-b',
+  ];
+  const actualElement = bemify('block', '__element', stringClasses, arrayClasses, objectClasses);
+  const expectedElement = expectedBlock.map((c) => c.replace('block', 'block__element'));
+  t.isEqual(actualBlock, expectedBlock.join(' '));
+  t.isEqual(actualElement, expectedElement.join(' '));
+  t.end();
+});
+
+test('variadic classes - throws if more than one element is supplied', (t) => {
+  t.throws(() => bemify('block', '__element-a', '__element-b'));
+  t.throws(() => bemify('block', '__element-a', ['__element-b']));
+  t.throws(() => bemify('block', '__element-a', { '__element-b': true }));
+  t.doesNotThrow(() => bemify('block', '__element-a', { '__element-b': false }));
+  t.end();
+});
+
+
 // No classes
 
 test('no classes - returns the block itself', (t) => {

@@ -28,17 +28,20 @@ const buildError = (message) => new Error(`bemify - ${message}`);
 const splitClasses = (classes) => (classes || '').split(/\s+/);
 
 // Simple one-level flattening
-const flattenReduce = (flat, arr) => [...arr, ...flat];
+const flattenReduce = (flat, item) => flat.concat(item);
 
 // Takes `classes` which may be one of several types and returns
 // an array of them with all falsy values filtered out.
 const normalizeSuffixes = (classes) => {
   let suffixes = [];
   if (isString(classes)) { suffixes = [classes]; }
-  if (isArray(classes)) { suffixes = [...classes]; }
+  if (isArray(classes)) { suffixes = classes.map(normalizeSuffixes); }
   if (isObject(classes)) { suffixes = truthyObjToArr(classes); }
   return suffixes
+    // flatten since `normalizeSuffixes` is recursive when `isArray`
+    .reduce(flattenReduce, [])
     .map(splitClasses)
+    // flatten since `splitClasses` could return nested arrays
     .reduce(flattenReduce, [])
     .filter(Boolean)
     .sort(); // facilitate testing
@@ -57,7 +60,7 @@ const getElement = (block, suffixes) => {
   return `${block}${els[0] || ''}`;
 };
 
-const bemify = curry1((block, denormalizedSuffixes) => {
+const bemify = curry1((block, ...denormalizedSuffixes) => {
   const suffixes = normalizeSuffixes(denormalizedSuffixes);
   const element = getElement(block, suffixes);
   const prefix = (suffix) => `${element}${suffix}`;
