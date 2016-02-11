@@ -1,0 +1,36 @@
+{
+  "name": "bemify-js",
+  "version": "0.1.0",
+  "description": "Simple BEM prefixing of CSS classes",
+  "main": "lib/bemify.js",
+  "scripts": {
+    "prebuild": "mkdir -p lib",
+    "build": "babel -o lib/bemify.js src/bemify.js",
+    "prepublish": "npm run build",
+    "test": "tape -r babel-register src/bemify-test.js | tap-spec"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/zapier/bemify-js"
+  },
+  "keywords": [
+    "bem",
+    "bemify",
+    "bemify-js",
+    "classnames",
+    "css"
+  ],
+  "author": "Steven Hauser <steven.hauser@zapier.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/zapier/bemify-js/issues"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.4.5",
+    "babel-preset-es2015": "^6.3.13",
+    "babel-register": "^6.4.3",
+    "tap-spec": "^4.1.1",
+    "tape": "^4.4.0"
+  },
+  "dependencies": {}
+}
