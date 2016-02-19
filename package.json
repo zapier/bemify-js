@@ -1,6 +1,6 @@
 {
   "name": "bemify-js",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Simple BEM prefixing of CSS classes",
   "main": "lib/bemify.js",
   "scripts": {
