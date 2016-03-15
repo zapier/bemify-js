@@ -70,7 +70,7 @@ const bemify = curry1((block, ...denormalizedSuffixes) => {
     // Not all items in `suffixes` may be actual BEM suffixes;
     // some may be standalone classes.
     ...suffixes.filter(negate(isSuffix)),
-  ].join(' ');
+  ].join(' ').trim();
 });
 
 export default bemify;
