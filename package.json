@@ -6,7 +6,7 @@
   "scripts": {
     "prebuild": "mkdir -p lib",
     "build": "babel -o lib/bemify.js src/bemify.js",
-    "prepublish": "npm run build",
+    "prepublish": "npm test && npm run build",
     "test": "tape -r babel-register src/bemify-test.js | tap-spec"
   },
   "repository": {
