@@ -32,13 +32,13 @@ const flattenReduce = (flat, item) => flat.concat(item);
 
 // Takes `classes` which may be one of several types and returns
 // an array of them with all falsy values filtered out.
-const normalizeSuffixes = (classes) => {
+const normalizeParts = (classes) => {
   let suffixes = [];
   if (isString(classes)) { suffixes = [classes]; }
-  if (isArray(classes)) { suffixes = classes.map(normalizeSuffixes); }
+  if (isArray(classes)) { suffixes = classes.map(normalizeParts); }
   if (isObject(classes)) { suffixes = truthyObjToArr(classes); }
   return suffixes
-    // flatten since `normalizeSuffixes` is recursive when `isArray`
+    // flatten since `normalizeParts` is recursive when `isArray`
     .reduce(flattenReduce, [])
     .map(splitClasses)
     // flatten since `splitClasses` could return nested arrays
@@ -61,7 +61,7 @@ const getElement = (block, suffixes) => {
 };
 
 const bemify = curry1((block, ...denormalizedSuffixes) => {
-  const suffixes = normalizeSuffixes(denormalizedSuffixes);
+  const suffixes = normalizeParts(denormalizedSuffixes);
   const element = getElement(block, suffixes);
   const prefix = (suffix) => `${element}${suffix}`;
   return [
@@ -74,3 +74,7 @@ const bemify = curry1((block, ...denormalizedSuffixes) => {
 });
 
 export default bemify;
+
+export const toModifiers = (...classes) => {
+  return normalizeParts(classes).map((c) => `--${c}`);
+};

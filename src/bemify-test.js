@@ -1,5 +1,7 @@
 import test from 'tape';
-import bemify from './bemify';
+import bemify, {
+  toModifiers
+} from './bemify';
 
 
 // Object classes
@@ -246,5 +248,22 @@ test('no classes - returns the block itself (curried)', (t) => {
   t.isEqual(bemify(block)({}), block);
   t.isEqual(bemify(block)([]), block);
   t.isEqual(bemify(block)(''), block);
+  t.end();
+});
+
+
+// Utilities
+
+test('converting to modifiers', (t) => {
+  const expected = ['--one', '--three', '--two']; // sorted
+  t.isEquivalent(toModifiers('one two three'), expected);
+  t.isEquivalent(toModifiers(['one', 'two', 'three']), expected);
+  t.isEquivalent(toModifiers({
+    'one': true,
+    'two': true,
+    'three': true,
+    'four': false,
+  }), expected);
+  t.isEquivalent(toModifiers('one', ['two'], { 'three': true }), expected);
   t.end();
 });
