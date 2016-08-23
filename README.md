@@ -49,4 +49,21 @@ bem('__element --modifier-a --modifier-b');
 // returns 'block__element block__element--modifier-a block__element--modifier-b'
 ```
 
+`toModifiers` is exported as a utility function for your using pleasure. It transforms its passed arguments into modifier (`--`) versions, returning an array of those modifiers. It accepts the same possible argument types as `bemify`'s second argument, ie strings, arrays, objects, or a combination. Useful for when you don't want to pepper `--` throughout your code.
+
+```js
+// Supply a space separated string and it'll be split.
+toModifiers('a b c');
+// returns ['--a', '--b', '--c']
+
+// Supply an array of strings and they'll be `map`ped into modifiers.
+toModifiers(['a', 'b', 'c']);
+// returns ['--a', '--b', '--c']
+
+// Supply an object whose values indicate whether or not
+// the modifiers should be used.
+toModifiers({ a: true, b: true, c: true, d: false });
+// returns ['--a', '--b', '--c']
+```
+
 Check out the tests for complete examples.
