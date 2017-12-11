@@ -60,17 +60,22 @@ const getElement = (block, suffixes) => {
   return `${block}${els[0] || ''}`;
 };
 
-const bemify = curry1((block, ...denormalizedSuffixes) => {
+const getBemClasses = (block, denormalizedSuffixes) => {
   const suffixes = normalizeParts(denormalizedSuffixes);
   const element = getElement(block, suffixes);
   const prefix = (suffix) => `${element}${suffix}`;
+
   return [
     element,
     ...suffixes.filter(isModifier).map(prefix),
     // Not all items in `suffixes` may be actual BEM suffixes;
     // some may be standalone classes.
     ...suffixes.filter(negate(isSuffix)),
-  ].join(' ').trim();
+  ]
+};
+
+const bemify = curry1((block, ...denormalizedSuffixes) => {
+  return getBemClasses(block, denormalizedSuffixes).join(' ').trim();
 });
 
 export default bemify;
@@ -78,3 +83,23 @@ export default bemify;
 export const toModifiers = (...classes) => {
   return normalizeParts(classes).map((c) => `--${c}`);
 };
+
+export const bemifyModule = (styles) => curry1((block, ...denormalizedSuffixes) => {
+  // Check if the CSS module contains the `block`
+  if (!isString(styles[block])) {
+    throw new Error(`Block element '${block}' does not exist.`);
+  }
+
+  return getBemClasses(block, denormalizedSuffixes)
+    .map((elem) => {
+      if (!isString(styles[elem])) {
+        console.warn(`bemify - No styles found for the following class name: ${elem}.`);
+
+        return 'bemify--undefined-classname';
+      }
+
+      return styles[elem];
+    })
+    .join(' ')
+    .trim();
+});
